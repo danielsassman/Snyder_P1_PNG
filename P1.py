@@ -132,6 +132,93 @@ def remove_horizontal_path(grid, path):
 	grid = list(map(list,zip(*grid))) #returning grid to normal state
 	return grid
 
+def read_lines(filename):
+	k=-1
+	com = 0
+	y = 0
+	with open(filename, 'r') as ppm:
+		data = ppm.readlines()
+		k += 1
+		if(data[k][0] == '#'):
+			com +=1	
+	newLen = len(data)-com
+	data2 = [0 for x in range(len(data))]
+	for r in range(newLen):
+		if(data[r][0] != "#"):
+			data2[r-y] = data[r]
+		else:
+			y += 1
+	#print(len(data2[0]))
+	#print(data2[1])
+	#print(data2[2])
+	#print(data2[3])
+	#print(data2[4])
+	#print(data2[len(data2)-2])
+	#print(data2[len(data2)-1])
+	return data2
+
+def ppm_to_grid(filename):
+	data = read_lines(filename)
+	rgbstring = ""
+	rowcol = data[1].split()
+	row = rowcol[0]
+	col = rowcol[1]
+	print("type = " + data[0])
+	print("row = " + row)
+	print("col = " + col)
+	print("max length = " + data[2])
+	print("data length = " + str(len(data)))
+	for k in range(3,len(data)):
+		rgbstring += str(data[k])
+	data2 = rgbstring.split()
+	#print(data2)
+	print("data2 " + str(len(data2)))
+	rgblength = int(row) * int(col)
+	print("rgb length = " + str(rgblength))
+	datacount = -1
+	
+
+	rgbcoords = [(0,0,0) for x in range(rgblength)]
+	for k in range(rgblength):
+		datacount += 1
+		num1 = data2[datacount]
+		datacount += 1
+		num2 = data2[datacount]
+		datacount += 1
+		num3 = data2[datacount]
+		rgbcoords[k] = (num1, num2, num3)
+	print("rgbcoords length = " + str(len(rgbcoords)))
+	
+	#HAVE TO SEPERATE BY ROWS. PUTTING EACH ROW INTO A INDEX OF A 2D LIST
+	finalMatrix = [[0 for x in range(int(col))] for x in range(int(row))]
+	print("final matrix length = " + str(len(finalMatrix)))
+	print("final matrix2 length = " + str(len(finalMatrix[0])))
+	print("rgbcoords[0] = " + str(rgbcoords[0]))
+	colCount = 0
+	rowCount = 0
+	
+	for h in range(len(rgbcoords)-1):
+		
+		finalMatrix[rowCount][colCount] = rgbcoords[h]
+		#print("finalmatrix: " + str(finalMatrix[rowCount][colCount]));
+		#print(h)
+		print("h = " + str(h) + " row = " + str(rowCount) + " col = " + str(colCount))
+		#print(colCount)
+		colCount += 1
+		if(colCount==(int(col))):
+			rowCount += 1
+			colCount = 0
+	print("rgbcoords = " + str(len(rgbcoords)))
+	print("finalmatrix[0] = " + str(finalMatrix[0]))
+	print("length finalmatrix[0] = " + str(len(finalMatrix[0])))
+	print("finalmatrix[10] = " + str(finalMatrix[10]))
+	#return finalMatrix		
+	#return rgbcoords
+	#print(rgbcoords[0])
+	#print(rgbcoords[1])
+	#print(rgbcoords[tupleCount-1])
+	
+
 def main():
 
 	
