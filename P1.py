@@ -62,7 +62,6 @@ def height_energy(grid, r, c):
 		blue = (get_blue(grid, (r-1), c) - get_blue(grid, (r+1), c))
 	return ((red * red) + (green * green) + (blue * blue))
 
-#HELPER FUNCTIONS
 
 #retrieves element at r,c
 def ret_element(grid,r,c):
@@ -82,6 +81,7 @@ def find_vertical_path(grid):
 	up = 0
 	r = 0 #setting row number
 	
+	#testing each starting point
 	for h in range (width(grid)):
 		r = h
 		vertCoords[0] = (0,h)
@@ -98,7 +98,7 @@ def find_vertical_path(grid):
 			up = 0
 			vertCoords[k] = (k,r)
 			k = k + 1
-		
+		#returning a value for each starting point and storing in totals array
 		for l in range(height(grid)):
 			totalEnergy = totalEnergy + int(energy_at(grid, int(vertCoords[l][0]), int(vertCoords[l][1])))
 		totals[totalCount] = totalEnergy
@@ -111,7 +111,8 @@ def find_vertical_path(grid):
 			totalReturn = p
 			minValue = totals[p]
 	vertCoords[0] = (0, totalReturn)
-	r = totalReturn						 
+	r = totalReturn
+	#starting at the correct point and returning the array that will be deleted
 	for k in range (1,height(grid)): #moving across the grid
 		nextCoord = vertGrid[k][r]
 		if r > 0 and vertGrid[k][r-1] <= nextCoord:
@@ -140,6 +141,7 @@ def find_horizontal_path(grid):
 	up = 0
 	r = 0 #setting row number
 	
+	#figuring out which value to start with	
 	for h in range (height(grid)):
 		r = h
 		horCoords[0] = (h,0)
@@ -156,7 +158,7 @@ def find_horizontal_path(grid):
 			up = 0
 			horCoords[k] = (r,k)
 			k = k + 1
-		
+		#computing the values that each starting point will provide
 		for l in range(width(grid)):
 			totalEnergy = totalEnergy + int(energy_at(grid, int(horCoords[l][0]), int(horCoords[l][1])))
 		totals[totalCount] = totalEnergy
@@ -169,7 +171,9 @@ def find_horizontal_path(grid):
 			totalReturn = p
 			minValue = totals[p]
 	horCoords[0] = (totalReturn, 0)
-	r = totalReturn						 
+	r = totalReturn		
+
+	#starting at the proper spot and coputing the delete array				 
 	for k in range (1,width(grid)): #moving across the grid
 		nextCoord = horGrid[r][k]
 		if r > 0 and horGrid[r-1][k] <= nextCoord:
@@ -193,8 +197,6 @@ def remove_vertical_path(grid, path):
 
 
 def remove_horizontal_path(grid, path):
-	#height = height(grid)
-	#width = width(grid)
 	for i in range (width(grid)):
 		grid[(path[i][0])][(path[i][1])] = (-1,i,-1)
 	grid = list(map(list,zip(*grid))) #transposing grid
@@ -203,6 +205,7 @@ def remove_horizontal_path(grid, path):
 	grid = list(map(list,zip(*grid))) #returning grid to normal state
 	return grid
 
+#reading lines and erasing comment lines
 def read_lines(filename):
 	k=-1
 	com = 0
@@ -221,6 +224,8 @@ def read_lines(filename):
 			y += 1
 	return data2
 
+#Given the name of a ppm file, open it up, read past the header information
+#and then read all the RGB values into a grid of RGB triplets. Return that grid.
 def ppm_to_grid(filename):
 	data = read_lines(filename)
 	rgbstring = ""
@@ -258,7 +263,7 @@ def ppm_to_grid(filename):
 			colCount = 0
 	return finalMatrix		
 	
-
+#Given a grid of RGB triplets, write out a ppm file to the given filename and save it.
 def grid_to_ppm(grid, filename):
 	f = open(filename, 'w')
 	f.write('P3\n')
@@ -276,40 +281,3 @@ def grid_to_ppm(grid, filename):
 
 
 
-#FOR TESTING???????????????????????????????????????????????????????????????????????????
-def make_file(msg,filename=".deletable_temp_file.txt"):
-	f = open(filename,'w')
-	f.write(msg)
-	f.close()
-
-def from_file(filename):
-	f = open (filename)
-	s = f.read()
-	f.close()
-	return s
-
-def g2():
-	return [[( 78, 209,  79), ( 63, 118, 247), ( 92, 175,  95), (243,  73, 183), (210, 109, 104), (252, 101, 119)],
-	      [(224, 191, 182), (108,  89,  82), ( 80, 196, 230), (112, 156, 180), (176, 178, 120), (142, 151, 142)],
-	      [(117, 189, 149), (171 ,231, 153), (149, 164, 168), (107, 119,  71), (120, 105, 138), (163, 174, 196)],
-	      [(163, 222, 132), (187 ,117, 183), ( 92, 145,  69), (158, 143,  79), (220,  75, 222), (189,  73, 214)],
-	      [(211, 120, 173), (188 ,218, 244), (214, 103,  68), (163, 166, 246), ( 79, 125, 246), (211, 201,  98)]
-	     ]
-
-def g5():
-	return [
-		[(0,0,0),(0,0,0),(10,20,30),(0,0,0),(0,0,0),(0,0,0)],
-		[(0,0,0),(2,3,4),( 1, 1, 1),(5,6,7),(0,0,0),(0,0,0)],
-		[(0,0,0),(0,0,0),(60,50,40),(0,0,0),(0,0,0),(0,0,0)],
-		[(0,0,0),(0,0,0),( 0, 0, 0),(0,0,0),(0,0,0),(0,0,0)]
-		]
-
-def main():
-	#print(energy_at(g2(), 0 ,0))
-	print(energy(g2()))
-	print(find_vertical_path(g2()))
-	#filename = ".temp_file.ppm"
-	#ppm = grid_to_ppm(g2(),filename)
-	#s = from_file(filename)
-	#tokens = s.split()
-	#print(tokens)
